@@ -1,0 +1,27 @@
+@import url("https://use.typekit.net/qyh6kcr.css");
+@import url("https://use.typekit.net/lzd3jvi.css");
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* グローバルで scrollbar-hide クラスを定義 */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE & Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* globals.css の例 */
+body {
+  padding-top: 50px; /* NavBarの高さに応じて調整 */
+}
+
+html {
+  scroll-behavior: smooth;
+}
