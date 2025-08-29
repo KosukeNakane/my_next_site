@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 export default function MyPage() {
@@ -29,7 +30,7 @@ export default function MyPage() {
                       if (ad?.image) setAvatar(ad.image);
                     } catch {}
                 }
-            } catch (e) {
+            } catch {
                 setError("セッション取得に失敗しました");
             } finally {
                 setLoading(false);
@@ -53,9 +54,9 @@ export default function MyPage() {
                     {/* Hero */}
                     <section className="relative bg-white text-gray-900 border-b border-gray-300">
                         <div className="relative px-8 py-10 flex items-center gap-6">
-                            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 ring-1 ring-gray-300 overflow-hidden">
+                            <div className="relative flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 ring-1 ring-gray-300 overflow-hidden">
                                 {avatar ? (
-                                  <img src={avatar} alt="avatar" className="w-full h-full object-cover" />
+                                  <Image src={avatar} alt="avatar" fill sizes="64px" className="object-cover" />
                                 ) : (
                                   <div className="w-full h-full bg-gray-200" />
                                 )}

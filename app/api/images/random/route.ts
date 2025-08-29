@@ -30,8 +30,7 @@ export async function GET() {
     }
     const pick = images[Math.floor(Math.random() * images.length)];
     return NextResponse.json({ success: true, image: pick, items: images });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ success: false, error: 'failed_to_list' }, { status: 500 });
   }
 }
-

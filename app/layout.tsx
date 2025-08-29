@@ -4,8 +4,8 @@ import AdobeFontsLoader from '../components/AdobeFontsLoader'
 import '../styles/globals.css'
 
 export const metadata = {
-  title: 'ens',
-  description: 'Created with Next.js',
+  title: '2025 summer memory',
+  description: 'food and city',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

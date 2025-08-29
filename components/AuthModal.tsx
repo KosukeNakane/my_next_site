@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -63,7 +63,7 @@ const AuthModal: React.FC<Props> = ({ open, mode, onClose }) => {
         const to = data.redirect || "/";
         window.location.href = to;
       }
-    } catch (err) {
+    } catch {
       setErrors(["通信エラーが発生しました。時間をおいてお試しください。"]);
     } finally {
       setLoading(false);
@@ -89,7 +89,7 @@ const AuthModal: React.FC<Props> = ({ open, mode, onClose }) => {
         const to = data.redirect || "/";
         window.location.href = to;
       }
-    } catch (err) {
+    } catch {
       setErrors(["通信エラーが発生しました。時間をおいてお試しください。"]);
     } finally {
       setLoading(false);

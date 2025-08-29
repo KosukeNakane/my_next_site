@@ -1,9 +1,10 @@
 "use client";
 
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import Image from "next/image";
 
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
@@ -16,9 +17,7 @@ type NavBarProps = {
 
 const NavBar: React.FC<NavBarProps> = ({ dark = false, mode = "" }) => {
   const [showNav, setShowNav] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
-  const phpBase = process.env.NEXT_PUBLIC_PHP_BASE_URL || '';
+  const lastScrollYRef = useRef(0);
 
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<AuthMode>("login");
@@ -28,8 +27,9 @@ const NavBar: React.FC<NavBarProps> = ({ dark = false, mode = "" }) => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setShowNav(currentScrollY < lastScrollY || currentScrollY < 50);
-      setLastScrollY(currentScrollY);
+      const last = lastScrollYRef.current;
+      setShowNav(currentScrollY < last || currentScrollY < 50);
+      lastScrollYRef.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -94,10 +94,13 @@ const NavBar: React.FC<NavBarProps> = ({ dark = false, mode = "" }) => {
         {/* ロゴ中央配置 */}
         <div className="absolute left-1/2 -translate-x-1/2 z-10">
           <Link href="/" className="block backdrop-blur-none">
-            <img
+            <Image
               src="/icons/icon.jpg"
               alt="ens logo"
+              width={80}
+              height={80}
               className="w-20 h-20 object-contain rounded-full"
+              priority
             />
           </Link>
         </div>
