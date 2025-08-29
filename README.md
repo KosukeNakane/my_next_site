@@ -1,4 +1,4 @@
-#  my_next_site — 開発環境構築ガイド（日本語）
+#  my_next_site — 開発環境構築ガイド
 
 本リポジトリは Next.js 15（App Router + TypeScript + Tailwind）を用いたフロントエンドと、認証・ブックマーク用の軽量な PHP バックエンド（MySQL）で構成されています。以下の手順に従ってローカル環境を構築してください。
 
