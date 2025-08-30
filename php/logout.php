@@ -3,11 +3,9 @@
 
 // CORS allow Next.js dev (3000)
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$allowedOrigins = [
-  'http://localhost:3000',
-  'http://127.0.0.1:3000',
-];
-if (in_array($origin, $allowedOrigins, true)) {
+$allowed = getenv('CORS_ALLOW_ORIGINS') ?: 'http://localhost:3000,http://127.0.0.1:3000';
+$allowedOrigins = array_filter(array_map('trim', explode(',', $allowed)));
+if ($origin && in_array($origin, $allowedOrigins, true)) {
   header('Access-Control-Allow-Origin: ' . $origin);
   header('Vary: Origin');
   header('Access-Control-Allow-Credentials: true');
@@ -37,4 +35,3 @@ if (ini_get('session.use_cookies')) {
 session_destroy();
 
 echo json_encode(['success' => true]);
-

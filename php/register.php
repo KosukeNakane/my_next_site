@@ -3,11 +3,9 @@
 
 // CORS at top
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$allowedOrigins = [
-  'http://localhost:3000',
-  'http://127.0.0.1:3000',
-];
-if (in_array($origin, $allowedOrigins, true)) {
+$allowed = getenv('CORS_ALLOW_ORIGINS') ?: 'http://localhost:3000,http://127.0.0.1:3000';
+$allowedOrigins = array_filter(array_map('trim', explode(',', $allowed)));
+if ($origin && in_array($origin, $allowedOrigins, true)) {
   header('Access-Control-Allow-Origin: ' . $origin);
   header('Vary: Origin');
   header('Access-Control-Allow-Credentials: true');
@@ -31,17 +29,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Load DB (my_next_site)
 if (file_exists(__DIR__ . '/db.php')) {
   require __DIR__ . '/db.php';
-  // Ensure users table exists before attempting to insert
+  // Ensure users table exists before attempting to insert (PostgreSQL)
   try {
     $pdo->exec("CREATE TABLE IF NOT EXISTS users (
-      id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+      id SERIAL PRIMARY KEY,
       username VARCHAR(50) NOT NULL,
       email VARCHAR(255) NOT NULL,
-      password VARCHAR(255) NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      UNIQUE KEY uniq_email (email),
-      UNIQUE KEY uniq_username (username)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+      password TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      CONSTRAINT uniq_email UNIQUE (email),
+      CONSTRAINT uniq_username UNIQUE (username)
+    );");
   } catch (Throwable $e) { /* ignore to avoid leaking errors */ }
 } else {
   http_response_code(500);
@@ -85,10 +83,10 @@ try {
     exit;
   }
   $hash = password_hash($password, PASSWORD_DEFAULT);
-  $ins = $pdo->prepare('INSERT INTO users (username, email, password) VALUES (:username, :email, :password)');
+  $ins = $pdo->prepare('INSERT INTO users (username, email, password) VALUES (:username, :email, :password) RETURNING id');
   $ins->execute([':username' => $username, ':email' => $email, ':password' => $hash]);
-
-  $_SESSION['user_id'] = (int)$pdo->lastInsertId();
+  $newId = $ins->fetchColumn();
+  $_SESSION['user_id'] = $newId ? (int)$newId : null;
   $_SESSION['username'] = $username;
   $_SESSION['login'] = true;
 

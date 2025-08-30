@@ -4,11 +4,9 @@
 
 // CORS allow Next.js dev (3000)
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$allowedOrigins = [
-  'http://localhost:3000',
-  'http://127.0.0.1:3000',
-];
-if (in_array($origin, $allowedOrigins, true)) {
+$allowed = getenv('CORS_ALLOW_ORIGINS') ?: 'http://localhost:3000,http://127.0.0.1:3000';
+$allowedOrigins = array_filter(array_map('trim', explode(',', $allowed)));
+if ($origin && in_array($origin, $allowedOrigins, true)) {
   header('Access-Control-Allow-Origin: ' . $origin);
   header('Vary: Origin');
   header('Access-Control-Allow-Credentials: true');
@@ -33,17 +31,16 @@ if (empty($_SESSION['user_id'])) {
 require __DIR__ . '/db.php';
 $userId = (int)$_SESSION['user_id'];
 
-// Ensure table exists (optional safe-guard; ignore error if already exists)
+// Ensure table exists (optional safe-guard; PostgreSQL)
 try {
   $pdo->exec("CREATE TABLE IF NOT EXISTS bookmarks (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id INT UNSIGNED NOT NULL,
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
     path VARCHAR(512) NOT NULL,
     title VARCHAR(255) DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE KEY uniq_user_path (user_id, path),
-    INDEX idx_user (user_id)
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT uniq_user_path UNIQUE (user_id, path)
+  );");
 } catch (Throwable $e) { /* ignore */ }
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -74,7 +71,7 @@ if ($method === 'POST') {
     exit;
   }
   try {
-    $stmt = $pdo->prepare('INSERT IGNORE INTO bookmarks (user_id, path, title) VALUES (:uid, :path, :title)');
+    $stmt = $pdo->prepare('INSERT INTO bookmarks (user_id, path, title) VALUES (:uid, :path, :title) ON CONFLICT (user_id, path) DO NOTHING');
     $stmt->execute([':uid' => $userId, ':path' => $path, ':title' => ($title !== '' ? $title : null)]);
     echo json_encode(['success' => true]);
   } catch (Throwable $e) {
@@ -105,4 +102,3 @@ if ($method === 'DELETE') {
 
 http_response_code(405);
 echo json_encode(['success' => false, 'error' => 'Method Not Allowed']);
-
