@@ -1,12 +1,10 @@
 FROM php:8.2-apache
 
-WORKDIR /var/www/html
+RUN apt-get update && apt-get install -y unzip git libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
+
 COPY . /var/www/html/
+COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
-RUN set -eux; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends libpq-dev; \
-    docker-php-ext-install pdo_pgsql; \
-    rm -rf /var/lib/apt/lists/*
-
-EXPOSE 80
+EXPOSE 10000
+CMD ["apache2-foreground"]
