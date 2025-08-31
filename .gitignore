@@ -46,3 +46,6 @@ public/images/illustration/LAM's_samples/*
 public/images/illustration/Kogecha's_samples/*
 public/images/illustration/John_Kafka's_samples/*
 public/images/illustration/kei_mochizuki's_samples/*
+
+# ESLint cache
+.eslintcache
