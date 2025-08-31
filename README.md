@@ -1,160 +1,200 @@
-#  my_next_site — 開発環境構築ガイド
 
-本リポジトリは Next.js 15（App Router + TypeScript + Tailwind）を用いたフロントエンドと、認証・ブックマーク用の軽量な PHP バックエンド（MySQL）で構成されています。以下の手順に従ってローカル環境を構築してください。
+# my_next_site — 開発環境構築ガイド
 
-## 技術スタック
+私が2025年の夏に撮影した写真を記録した Web サイトです。
+ログインすると写真をブックマークに保存できます。
+
+本リポジトリは Next.js 15（App Router + TypeScript + Tailwind）を用いたフロントエンドと、ログイン認証・ブックマーク機能を提供する軽量な PHP バックエンド（PostgreSQL）で構成されています。
+
+公開版は [my-next-site-three.vercel.app](https://my-next-site-three.vercel.app) から閲覧できます。
+ローカルで動作させたい場合は「## 4. ローカル実行環境構築手順」に従って環境を構築してください。
+
+---
+
+## 1. 技術スタック
+
 - Next.js 15（React 18）
 - Tailwind CSS
 - MUI（アイコン等）
-- PHP 8.x（認証・ブックマーク API）
-- MySQL 8（ブックマーク保存）
+- PHP 8.x（ログイン認証・ブックマーク API）
+- PostgreSQL 15+（ログイン認証・ブックマーク保存）
 
-## 前提条件
+---
+
+## 2. 環境要件
+
 - Node.js 20 以上（LTS 推奨）
 - npm 10 以上（Node 20 に同梱）
-- PHP 8.x（pdo_mysql 有効）
-- MySQL 8（MAMP 付属の MySQL でも可）
+- PHP 8.x（pdo_pgsql 有効）
+- PostgreSQL 15 以上（ローカル or Render）
 
-任意（簡単に動かしたい方向け）
-- MAMP（Apache/ MySQL を手早く用意可能）
+---
 
-## リポジトリ構成（概要）
+## 3. リポジトリ構成（概要）
+
 - `app/` — Next.js App Router のページと API ルート
   - `api/bookmarks/` — ブックマーク API（PHP へプロキシ）
-  - `api/session|login|logout|register/` — 認証 API（PHP へプロキシ）
+  - `api/session|login|logout|register/` — ログイン認証 API（PHP へプロキシ）
   - `api/images/random/` — `public/images` からランダム画像を返却
   - `food/`, `himeji/`, `tokyo-yokohama/` — 各ギャラリーページ（PicCard）
 - `components/` — 共通 UI（NavBar, BookmarkButton など）
 - `public/images/` — 画像アセット
 - `php/` — PHP エンドポイント（`bookmarks.php`, `session.php`, `login.php`, `logout.php`, `register.php`, `db.php`）
 
-## 1) 依存関係インストール
-```
-npm install
-```
+---
 
-## 2) 環境変数の設定
-リポジトリ直下に `.env.local` を作成し、PHP を公開しているベース URL を設定します。
-```
-# PHP の公開 URL（/php/*.php に到達できるルート）
-NEXT_PUBLIC_PHP_BASE_URL=http://localhost:8888
-```
-Next.js の API ルートは、この値を使って `NEXT_PUBLIC_PHP_BASE_URL/php/...` にアクセスします。
+## 4. ローカル実行環境構築手順
 
-## 3) PHP 環境構築（MAMP を使う場合）
-1. MAMP をインストール
-2. Web server に Apache を選択
-3. Preferences → Server から Document root に「このリポジトリのルート」を指定
-4. Start を押して MAMP を起動
-5. ブラウザで `http://localhost:8888/php/session.php` や `http://localhost:8888/php/bookmarks.php` にアクセスして表示されることを確認
+### 4.1 PostgreSQL インストール例
 
-これにより、Next.js から PHP への連携（ログイン処理・ブックマーク処理）が可能になります。
+- **Mac (Homebrew)**
 
-補足（MySQL 設定）
-- 既定の接続情報（`php/db.php`）：
-  - `DB_HOST=127.0.0.1`
-  - `DB_PORT=8889`（MAMP の MySQL 既定）
-  - `DB_NAME=my_next_site`
-  - `DB_USER=root`
-  - `DB_PASS=root`
-- 必要に応じて MySQL に `my_next_site` データベースを作成してください（MAMP の phpMyAdmin 等で作成可）。
-- `php/bookmarks.php` は初回アクセス時に `bookmarks` テーブルを自動作成します。
+  ```bash
+  brew install postgresql
+  brew services start postgresql
+  ```
 
-## データベースを手動で作成する場合
+- **Linux (Ubuntu 例)**
 
-本リポジトリの PHP コードでは `bookmarks` テーブルは初回アクセス時に自動作成されますが、
-本番環境などで **データベースを手動で準備したい場合** は以下の手順を実行してください。
+  ```bash
+  sudo apt update
+  sudo apt install postgresql postgresql-contrib
+  sudo systemctl start postgresql
+  sudo systemctl enable postgresql
+  ```
 
-```sql
--- データベースを作成
-CREATE DATABASE my_next_site
-  DEFAULT CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
+- **Windows**
+  [PostgreSQL公式サイト](https://www.postgresql.org/download/windows/)からインストーラーをダウンロードしてセットアップしてください。
 
--- データベースを選択
-USE my_next_site;
+---
 
--- users テーブルを作成
-CREATE TABLE users (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(50) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY uniq_email (email),
-  UNIQUE KEY uniq_username (username)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+### 4.2 PostgreSQL ロール（ユーザー）作成
+
+PostgreSQL に `postgres` ロールが存在しない場合は、以下のコマンドで作成します。
+`<OSユーザー名>` は適宜置き換えてください。
+
+```bash
+createuser -U <OSユーザー名> -s -P postgres
 ```
 
-- `my_next_site` の部分は `php/db.php` に記載されたデータベース名と揃えてください。
-- `password` カラムには **平文ではなく `password_hash()` でハッシュ化したパスワード** を保存してください。
+---
 
-（MAMP を使わず PHP 内蔵サーバを使う場合の例）
+### 4.3 データベース作成とテーブル初期化
+
+以下のコマンドでデータベース作成とテーブルの流し込みを一括で行えます。
+
+```bash
+psql -U postgres -d postgres -c "CREATE DATABASE my_next_site_dev;" \
+&& psql -U postgres -d my_next_site_dev -f sql/users.sql \
+&& psql -U postgres -d my_next_site_dev -f sql/bookmarks.sql
 ```
-# リポジトリ直下で実行
-export DB_HOST=127.0.0.1
-export DB_PORT=8889
-export DB_NAME=my_next_site
-export DB_USER=root
-export DB_PASS=root
+
+---
+
+### 4.4 PHP 内蔵サーバ起動
+
+リポジトリ直下で以下を実行し、PHP の内蔵サーバを起動します。
+
+```bash
 php -S localhost:8888 -t .
 ```
 
-## 4) フロントエンド（Next.js）を起動
-開発モード:
+---
+
+## 4.5 依存関係インストール
+
+```bash
+npm install
 ```
+
+---
+
+### 4.6 Next.js 開発サーバ起動
+
+別ターミナルで以下を実行し、Next.js の開発サーバを起動します。
+
+```bash
 npm run dev
 ```
-`http://localhost:3000` で起動します。`.env.local` の `NEXT_PUBLIC_PHP_BASE_URL` を用いて PHP へアクセスします。
 
-本番ビルド:
-```
+ブラウザで `http://localhost:3000` にアクセスし、動作を確認してください。
+
+---
+
+### 4.7 本番ビルド・起動
+
+```bash
 npm run build
 npm start
 ```
-本番でも PHP（および MySQL）は別途稼働させておく必要があります。
 
-## 5) 主な機能と API
-- PicCard ブックマーク
-  - 各カード右下の MUI アイコン（しおり）で登録/解除
+※ 本番環境でも PHP サーバーは別途稼働させておく必要があります。
+
+---
+
+
+本サイトはスマートフォン・タブレット・PC で快適に利用できるようレスポンシブ対応しています。
+
+## 5. 主な機能と API
+
+- **PicCard ブックマーク**
+  - 各カード右下のブックマークアイコンから登録/解除
   - ブックマークは `#アンカー` を含む URL として保存
   - `/mypage` に一覧表示。クリックで該当カード位置にスクロール遷移
-- 認証系（Next → PHP プロキシ）
+
+- **ログイン認証（Next → PHP プロキシ）**
   - `GET /api/session` → `php/session.php`
   - `POST /api/login` → `php/login.php`
   - `POST /api/logout` → `php/logout.php`
   - `POST /api/register` → `php/register.php`
-- ブックマーク API（Next → PHP プロキシ）
+
+- **ブックマーク API（Next → PHP プロキシ）**
   - `GET/POST/DELETE /api/bookmarks` → `php/bookmarks.php`
-- ランダム画像
+
+- **ランダム画像**
   - `GET /api/images/random` — `public/images` から 1 枚を返却（アバター用途）
 
-## 6) フォント
+---
+
+## 6. フォント設定
+
 - Tailwind の `fontFamily` は `tailwind.config.js` に定義済み
 - Adobe（Typekit）の CSS は `components/AdobeFontsLoader.tsx` と `styles/globals.css` で読み込み
 - 反映されない場合はネットワークで Typekit ドメインがブロックされていないか確認してください
 
-## 7) トラブルシューティング
-- PHP へのアクセスで 404/CORS になる
-  - `NEXT_PUBLIC_PHP_BASE_URL` を再確認（例: `http://localhost:8888`）
-  - MAMP の Document root がこのリポジトリを指しているか確認
-- MySQL 接続エラー
-  - `php/db.php` の `DB_*` を確認。`pdo_mysql` が有効かもチェック
-  - MAMP 既定は `user=root`, `pass=root`, `port=8889`
-- フォントが想定と異なる
-  - `AdobeFontsLoader` がマウントされているか、Typekit がブロックされていないか確認
-- 画像が表示されない
-  - `public/images` 以下のパス/拡張子（.JPG と .jpg の違いなど）を再確認
+---
 
-## 8) スクリプト
+## 7. トラブルシューティング
+
+- **PHP へのアクセスで 500 エラーが出る**
+  - PHP 内蔵サーバの起動を確認
+
+- **フォントが想定と異なる**
+  - Typekit ドメインがブロックされていないか確認
+
+---
+
+## 8. スクリプト一覧
+
 - `npm run dev` — 開発起動（Turbopack）
 - `npm run build` — 本番ビルド
 - `npm start` — 本番起動
 - `npm run lint` — Lint 実行
 
-## 9) デプロイ
-- Next.js（Vercel など）をホストし、`NEXT_PUBLIC_PHP_BASE_URL` を PHP 側の公開 URL に設定
-- PHP + MySQL は任意の LAMP 環境でホストし、`DB_*` を設定。クッキー/セッションが同一ドメイン/サブドメインで機能するように構成
+---
+
+## 9. デプロイ（Vercel + Render）
+
+- **フロントエンド（Vercel）**
+  - 本リポジトリの Next.js を Vercel にデプロイ
+  - 環境変数 `NEXT_PUBLIC_PHP_BASE_URL` に Render の PHP Web Service の URL を設定
+
+- **バックエンド（Render Web Service + Render PostgreSQL）**
+  - Render Web Service に PHP をデプロイ（ドキュメントルートをこのリポジトリ直下に設定）
+  - Render PostgreSQL を作成し、PHP サービスに `DATABASE_URL` を設定（自動で `sslmode=require` に対応）
+  - CORS 設定：PHP サービスに `CORS_ALLOW_ORIGINS` を設定（Vercel の URL とローカル開発 URL をカンマ区切りで）
+  - セッション/クッキーは同一ドメイン/サブドメインでの取り扱いに注意（必要に応じて Cookie 属性やドメインを調整）
 
 ---
-不明点やエラーがあれば、環境情報・手順・ログを添えて連絡してください。
+
+不明点やエラーがあれば、環境情報・手順・ログを添えてご連絡ください。
