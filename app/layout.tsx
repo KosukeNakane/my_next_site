@@ -4,6 +4,8 @@ import AdobeFontsLoader from '../components/AdobeFontsLoader'
 import '../styles/globals.css'
 import AnchorScrollFix from '../components/AnchorScrollFix'
 import Footer from '../components/Footer'
+import Script from 'next/script'
+import RouteTransition from '../components/RouteTransition'
 
 export const metadata = {
   title: '2025 summer memory',
@@ -21,9 +23,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="dark min-h-screen flex flex-col">
+        {/* Lottie (bodymovin) CDN for JSON-based animations */}
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" strategy="afterInteractive" data-lottie-cdn="true" />
         <AdobeFontsLoader />
         <NavBar />
         <AnchorScrollFix />
+        <RouteTransition />
         <BackButton />
         <div className="flex-1">
           {children}

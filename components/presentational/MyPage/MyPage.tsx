@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import BookmarkIcon from '@mui/icons-material/Bookmark';
+import LottieBookmarkIcon from "../../LottieBookmarkIcon";
 
 export type BookmarkItem = { path: string; title: string; created_at?: string };
 
@@ -39,7 +39,7 @@ const DesktopMyPage = ({ username, loading, error, avatar, items, onCardClick, o
                 <p className="text-sm sm:text-base text-gray-600 mt-1">ブックマークを管理・アクセスできます。</p>
               </div>
               <div className="ml-auto hidden sm:flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1.5 text-sm ring-1 ring-gray-200 text-gray-700">
-                <BookmarkIcon sx={{ fontSize: 18, color: '#38bdf8' }} />
+                <LottieBookmarkIcon size={18} frame="end" />
                 <span className="tabular-nums">{items.length}</span>
                 <span>件</span>
               </div>
@@ -49,14 +49,14 @@ const DesktopMyPage = ({ username, loading, error, avatar, items, onCardClick, o
           <section>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold flex items-center gap-2">
-                <BookmarkIcon sx={{ fontSize: 22, color: '#38bdf8' }} />
+                <LottieBookmarkIcon size={40} frame="end" />
                 ブックマーク
               </h2>
               <div className="sm:hidden text-sm text-gray-500">{items.length}件</div>
             </div>
             {items.length === 0 ? (
               <div className="rounded-xl border border-dashed border-gray-300 p-8 text-center text-gray-500 bg-white/50">
-                まだブックマークはありません。各カード右下のアイコンから追加できます。
+                まだブックマークはありません。<br />各カード右下のアイコンから追加できます。
               </div>
             ) : (
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">

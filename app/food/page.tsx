@@ -33,7 +33,7 @@ const PicCard = ({
         className="object-cover transition duration-300 ease-in-out group-hover:scale-105"
         priority={false}
       />
-      <BookmarkButton path={`${pathname}#${id}`} title={title} />
+
       <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-30 transition duration-300" />
       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
         <div className="bg-black/80 px-4 py-2">
@@ -41,8 +41,9 @@ const PicCard = ({
         </div>
       </div>
       <div className="absolute bottom-0 left-0 w-full">
-        <div className="p-4 md:p-5 text-white bg-black/50 w-full">
+        <div className="px-4 py-2 md:p-5 text-white bg-black/50 w-full flex items-center justify-between">
           <h3 className="font-fotTsukuaoldminPr6n text-2xl md:text-4xl font-medium tracking-tight mb-1">{title}</h3>
+          <BookmarkButton inline path={`${pathname}#${id}`} title={title} />
         </div>
       </div>
     </div>

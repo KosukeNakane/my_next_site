@@ -135,8 +135,13 @@ const SpCarousel = () => {
               key={idx}
               type="button"
               onClick={() => {
-                try { sessionStorage.setItem('pendingTarget', it.id); } catch {}
-                router.push(it.base);
+                try {
+                  const evt = new CustomEvent('app:navigate', { detail: { href: it.base, pendingTarget: it.id } });
+                  window.dispatchEvent(evt);
+                } catch {
+                  try { sessionStorage.setItem('pendingTarget', it.id); } catch {}
+                  router.push(it.base);
+                }
               }}
               className="relative w-[85vw] sm:w-[600px] h-[45vw] sm:h-[300px] flex-shrink-0 snap-center"
               aria-label="carousel image"

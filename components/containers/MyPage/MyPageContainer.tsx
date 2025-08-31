@@ -50,9 +50,12 @@ const MyPageContainer = () => {
   const onCardClick = (path: string) => {
     const [base, hash] = path.split('#');
     try {
-      if (hash) sessionStorage.setItem('pendingTarget', hash);
-    } catch {}
-    router.push(base);
+      const evt = new CustomEvent('app:navigate', { detail: { href: base, pendingTarget: hash || undefined } });
+      window.dispatchEvent(evt);
+    } catch {
+      if (hash) try { sessionStorage.setItem('pendingTarget', hash); } catch {}
+      router.push(base);
+    }
   };
 
   const onDelete = async (path: string) => {
