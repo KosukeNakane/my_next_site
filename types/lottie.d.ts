@@ -1,8 +1,7 @@
 declare global {
   interface Window {
-    lottie?: any;
+    lottie?: unknown;
   }
 }
 
 export {};
-

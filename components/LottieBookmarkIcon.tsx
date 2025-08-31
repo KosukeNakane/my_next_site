@@ -11,14 +11,36 @@ type Props = {
 
 const LOTTIE_JSON_SRC = '/lottifiles/Animation Bookmark.json';
 
-async function ensureLottie(): Promise<any | null> {
+type LottieAnimation = {
+  stop?: () => void;
+  play?: () => void;
+  setDirection?: (dir: number) => void;
+  goToAndStop?: (value: number, isFrame: boolean) => void;
+  addEventListener?: (name: string, cb: (...args: unknown[]) => void, options?: unknown) => void;
+  removeEventListener?: (name: string, cb: (...args: unknown[]) => void) => void;
+  totalFrames?: number;
+  destroy?: () => void;
+};
+type LottieApi = {
+  loadAnimation: (params: {
+    container: HTMLElement;
+    renderer: 'svg' | 'canvas' | 'html';
+    loop?: boolean;
+    autoplay?: boolean;
+    path?: string;
+    animationData?: unknown;
+    rendererSettings?: Record<string, unknown>;
+  }) => LottieAnimation;
+};
+
+async function ensureLottie(): Promise<LottieApi | null> {
   if (typeof window === 'undefined') return null;
-  if ((window as any).lottie) return (window as any).lottie;
+  if ((window as Window & { lottie?: unknown }).lottie) return (window as Window & { lottie?: unknown }).lottie as LottieApi;
   await new Promise<void>((resolve) => {
     const existing = document.querySelector('script[data-lottie-cdn]') as HTMLScriptElement | null;
     if (existing) {
-      if ((window as any).lottie) return resolve();
-      existing.addEventListener('load', () => resolve(), { once: true } as any);
+      if ((window as Window & { lottie?: unknown }).lottie) return resolve();
+      existing.addEventListener('load', () => resolve(), { once: true } as AddEventListenerOptions);
       setTimeout(() => resolve(), 50);
       return;
     }
@@ -26,15 +48,15 @@ async function ensureLottie(): Promise<any | null> {
     s.src = 'https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js';
     s.async = true;
     s.setAttribute('data-lottie-cdn', 'true');
-    s.addEventListener('load', () => resolve(), { once: true } as any);
+    s.addEventListener('load', () => resolve(), { once: true } as AddEventListenerOptions);
     document.head.appendChild(s);
   });
-  return (window as any).lottie || null;
+  return ((window as Window & { lottie?: unknown }).lottie as LottieApi) || null;
 }
 
 export default function LottieBookmarkIcon({ size = 22, frame = 'end', className = '', title }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const animRef = useRef<any | null>(null);
+  const animRef = useRef<LottieAnimation | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -72,8 +94,8 @@ export default function LottieBookmarkIcon({ size = 22, frame = 'end', className
     if (!a || !ready) return;
     try {
       const end = (a.totalFrames ?? 60) - 1;
-      if (frame === 'end') a.goToAndStop(end, true);
-      else a.goToAndStop(0, true);
+      if (frame === 'end') a.goToAndStop?.(end, true);
+      else a.goToAndStop?.(0, true);
     } catch {}
   }, [ready, frame]);
 
@@ -83,4 +105,3 @@ export default function LottieBookmarkIcon({ size = 22, frame = 'end', className
     </span>
   );
 }
-

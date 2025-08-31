@@ -14,19 +14,41 @@ export default function BookmarkButton({ path, title, inline = false }: Props) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [active, setActive] = useState(false);
   const [loading, setLoading] = useState(false);
-  const animRef = useRef<any | null>(null);
+  type LottieAnimation = {
+    stop?: () => void;
+    play?: () => void;
+    setDirection?: (dir: number) => void;
+    goToAndStop?: (value: number, isFrame: boolean) => void;
+    addEventListener?: (name: string, cb: (...args: unknown[]) => void, options?: unknown) => void;
+    removeEventListener?: (name: string, cb: (...args: unknown[]) => void) => void;
+    totalFrames?: number;
+    destroy?: () => void;
+  };
+  type LottieApi = {
+    loadAnimation: (params: {
+      container: HTMLElement;
+      renderer: 'svg' | 'canvas' | 'html';
+      loop?: boolean;
+      autoplay?: boolean;
+      path?: string;
+      animationData?: unknown;
+      rendererSettings?: Record<string, unknown>;
+    }) => LottieAnimation;
+  };
+
+  const animRef = useRef<LottieAnimation | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [animReady, setAnimReady] = useState(false);
 
-  const ensureLottie = async (): Promise<any | null> => {
+  const ensureLottie = async (): Promise<LottieApi | null> => {
     if (typeof window === 'undefined') return null;
-    if ((window as any).lottie) return (window as any).lottie;
+    if ((window as Window & { lottie?: unknown }).lottie) return (window as Window & { lottie?: unknown }).lottie as LottieApi;
     await new Promise<void>((resolve) => {
       const existing = document.querySelector('script[data-lottie-cdn]') as HTMLScriptElement | null;
       if (existing) {
-        if ((window as any).lottie) return resolve();
-        existing.addEventListener('load', () => resolve(), { once: true } as any);
+        if ((window as Window & { lottie?: unknown }).lottie) return resolve();
+        existing.addEventListener('load', () => resolve(), { once: true } as AddEventListenerOptions);
         setTimeout(() => resolve(), 50);
         return;
       }
@@ -34,10 +56,10 @@ export default function BookmarkButton({ path, title, inline = false }: Props) {
       s.src = 'https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js';
       s.async = true;
       s.setAttribute('data-lottie-cdn', 'true');
-      s.addEventListener('load', () => resolve(), { once: true } as any);
+      s.addEventListener('load', () => resolve(), { once: true } as AddEventListenerOptions);
       document.head.appendChild(s);
     });
-    return (window as any).lottie || null;
+    return ((window as Window & { lottie?: unknown }).lottie as LottieApi) || null;
   };
 
   useEffect(() => {
@@ -98,8 +120,8 @@ export default function BookmarkButton({ path, title, inline = false }: Props) {
     if (playing) return;
     try {
       const end = (a.totalFrames ?? 60) - 1;
-      if (active) a.goToAndStop(end, true);
-      else a.goToAndStop(0, true);
+      if (active) a.goToAndStop?.(end, true);
+      else a.goToAndStop?.(0, true);
     } catch { }
   }, [animReady, active, playing]);
 
@@ -130,13 +152,13 @@ export default function BookmarkButton({ path, title, inline = false }: Props) {
               const onComplete = () => { setPlaying(false); };
               const start = () => {
                 setPlaying(true);
-                a.removeEventListener?.('complete', onComplete as any);
+                a.removeEventListener?.('complete', onComplete);
                 a.stop?.();
                 a.setDirection?.(1);
                 a.play?.();
-                a.addEventListener?.('complete', onComplete, { once: true } as any);
+                a.addEventListener?.('complete', onComplete, { once: true });
               };
-              if (animReady) start(); else a.addEventListener?.('data_ready', start, { once: true } as any);
+              if (animReady) start(); else a.addEventListener?.('data_ready', start, { once: true });
             }
           } catch { }
         }

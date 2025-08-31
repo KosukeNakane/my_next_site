@@ -67,7 +67,7 @@ export default function RouteTransition() {
 
     return () => {
       clearTimeout(t);
-      document.removeEventListener('click', onClick, { capture: true } as any);
+      document.removeEventListener('click', onClick, { capture: true } as AddEventListenerOptions);
       window.removeEventListener('app:navigate', onAppNavigate as EventListener);
     };
   }, [router]);

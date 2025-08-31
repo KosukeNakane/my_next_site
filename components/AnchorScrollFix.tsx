@@ -7,7 +7,11 @@ function getHeaderOffset(): number {
   // Try actual header height first
   const header = document.querySelector('header');
   const h = header instanceof HTMLElement ? header.offsetHeight : 0;
-  if (h > 0) return h + (Number((window as any).visualViewport?.offsetTop || 0));
+  if (h > 0) {
+    const vv = (window as Window & { visualViewport?: { offsetTop?: number } }).visualViewport;
+    const vvTop = typeof vv?.offsetTop === 'number' ? vv.offsetTop : 0;
+    return h + vvTop;
+  }
 
   // Fallback to CSS variable --header-offset
   const cssVar = getComputedStyle(document.documentElement).getPropertyValue('--header-offset');
