@@ -12,13 +12,13 @@ const NewsItem = ({
   href: string;
 }) => {
   return (
-    <li className="border-b pb-4">
+    <li className="border-b pb-3">
       <Link href={href} className="block hover:opacity-85 transition">
-        <h3 className="text-lg font-semibold mb-1">{title}</h3>
-        <p className="text-sm text-gray-600">
+        <h3 className="text-base font-semibold mb-1">{title}</h3>
+        <p className="text-xs text-gray-600">
           {date}
           {category && (
-            <span className="inline-block bg-gray-200 text-gray-800 text-xs font-bold px-2 py-1 ml-2">
+            <span className="inline-block bg-gray-200 text-gray-800 text-[10px] font-bold px-2 py-0.5 ml-2">
               {category}
             </span>
           )}
@@ -28,12 +28,12 @@ const NewsItem = ({
   );
 };
 
-const RecentSection = () => {
+const SpRecentSection = () => {
   return (
-    <section className="w-full bg-white py-16 px-4">
+    <section className="w-full bg-white py-8 px-4">
       <div className="max-w-[1200px] mx-auto">
-        <h2 className="text-4xl font-bold mb-8">Recent Updates</h2>
-        <ul className="space-y-6">
+        <h2 className="text-xl font-bold mb-4">Recent Updates</h2>
+        <ul className="space-y-4">
           <NewsItem
             title="FOOD コレクションを公開"
             date="2025-08-30"
@@ -58,4 +58,5 @@ const RecentSection = () => {
   );
 };
 
-export default RecentSection;
+export default SpRecentSection;
+
