@@ -18,6 +18,7 @@ try {
         $user = $url['user'] ?? '';
         $pass = isset($url['pass']) ? urldecode($url['pass']) : '';
 
+        // On Render, require SSL
         $dsn = "pgsql:host={$host};port={$port};dbname={$db};sslmode=require";
         $pdo = new PDO($dsn, $user, $pass, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -25,15 +26,17 @@ try {
             PDO::ATTR_EMULATE_PREPARES => false,
         ]);
     } else {
-        // Fallback to discrete env vars (still enforce sslmode=require)
+        // Fallback to discrete env vars (local default)
+        // Defaults to local development DB `my_next_site_dev` without forcing SSL
         $host = getenv('DB_HOST') ?: '127.0.0.1';
         $port = getenv('DB_PORT') ?: '5432';
-        $db   = getenv('DB_NAME') ?: 'my_next_site';
+        $db   = getenv('DB_NAME') ?: 'my_next_site_dev';
         $user = getenv('DB_USER') ?: 'postgres';
         $pass = getenv('DB_PASS') !== false ? getenv('DB_PASS') : getenv('DB_PASSWORD');
         if ($pass === false) { $pass = ''; }
 
-        $dsn = "pgsql:host={$host};port={$port};dbname={$db};sslmode=require";
+        $sslmode = getenv('DB_SSLMODE') ?: 'prefer'; // prefer for local dev
+        $dsn = "pgsql:host={$host};port={$port};dbname={$db};sslmode={$sslmode}";
         $pdo = new PDO($dsn, (string)$user, (string)$pass, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
