@@ -3,22 +3,23 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 
+// Preload targets for smoother rotations
+const SOURCES = [
+  "/images/home/home_01.jpg",
+  "/images/home/home_02.jpg",
+  "/images/home/home_03.jpg",
+];
+
 const SpCarousel = () => {
   const isScrolling = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRaf = useRef<number | null>(null);
-  const sources = [
-    "/images/home/home_01.jpg",
-    "/images/home/home_02.jpg",
-    "/images/home/home_03.jpg",
-  ];
 
   useEffect(() => {
     const container = containerRef.current;
     if (container) {
       const width = (container.firstElementChild?.firstElementChild as HTMLElement)?.clientWidth || 0;
-      // @ts-ignore behavior: 'instant' is supported by browsers though not typed
-      container.scrollTo({ left: width, behavior: "instant" });
+      container.scrollLeft = width;
     }
   }, []);
 
@@ -71,7 +72,7 @@ const SpCarousel = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (img as any).decode?.().catch(() => {});
     };
-    sources.forEach(preload);
+    SOURCES.forEach(preload);
   }, []);
 
   const onScrollLoop = () => {
