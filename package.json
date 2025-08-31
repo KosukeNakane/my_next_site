@@ -38,6 +38,6 @@
     "typescript": "^5"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "next lint"
+    "*.{js,jsx,ts,tsx}": "eslint --cache --fix --max-warnings=-1"
   }
 }
