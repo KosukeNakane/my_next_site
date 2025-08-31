@@ -6,7 +6,7 @@ import SectionLinksContainer from "../components/containers/SectionLinksContaine
 
 const Home = () => {
   return (
-    <section className="relative min-h-screen pt-4 md:pt-16 pb-12 md:pb-16 bg-white text-black overflow-hidden">
+    <section className="relative min-h-screen pt-2 md:pt-14 bg-white text-black overflow-hidden">
       <CarouselContainer />
       <div className="mx-auto max-w-screen-xl px-4">
         <div className="mx-auto text-center max-w-screen-md">

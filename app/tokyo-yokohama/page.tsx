@@ -52,7 +52,7 @@ const PicCard = ({
 const TOKYO_YOKOHAMA = () => {
   return (
     <>
-      <section className="relative min-h-screen py-4 md:py-16 overflow-hidden w-full overflow-x-hidden">
+      <section className="relative min-h-screen pt-4 md:pt-16 overflow-hidden w-full overflow-x-hidden">
         <div className="fixed inset-0 w-full h-full bg-repeat bg-cover bg-center z-[-2]" aria-hidden="true" />
 
         <div className="mx-auto max-w-screen-xl px-4">
@@ -63,7 +63,7 @@ const TOKYO_YOKOHAMA = () => {
           </div>
           <div className="flex justify-center animate-slide-up">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 max-w-[1200px] w-full mx-auto">
-              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.6, ease: "easeOut" }}>
+              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.6, ease: "easeOut" }}>
                 <PicCard
                   imageSrc="/images/tokyo-yokohama/TY_01.jpg"
                   altText="nyanyanya"
@@ -73,7 +73,7 @@ const TOKYO_YOKOHAMA = () => {
                 />
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}>
+              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}>
                 <PicCard
                   imageSrc="/images/tokyo-yokohama/TY_02.jpg"
                   altText="あかれんが"
@@ -83,7 +83,7 @@ const TOKYO_YOKOHAMA = () => {
                 />
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.6, ease: "easeOut" }}>
+              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.6, ease: "easeOut" }}>
                 <PicCard
                   imageSrc="/images/tokyo-yokohama/TY_03.jpg"
                   altText="あ！"
@@ -93,7 +93,7 @@ const TOKYO_YOKOHAMA = () => {
                 />
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}>
+              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}>
                 <PicCard
                   imageSrc="/images/tokyo-yokohama/TY_04.jpg"
                   altText="歩行者天国"
@@ -103,7 +103,7 @@ const TOKYO_YOKOHAMA = () => {
                 />
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.6, ease: "easeOut" }}>
+              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.6, ease: "easeOut" }}>
                 <PicCard
                   imageSrc="/images/home/home_02.jpg"
                   altText="ちゃーはんおいしー"
@@ -113,7 +113,7 @@ const TOKYO_YOKOHAMA = () => {
                 />
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}>
+              <motion.div initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.1 }} transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}>
                 <PicCard
                   imageSrc="/images/home/home_03.jpg"
                   altText="ぼてじん"

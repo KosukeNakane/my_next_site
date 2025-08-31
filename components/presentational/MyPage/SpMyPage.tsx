@@ -19,7 +19,7 @@ export type SpMyPageProps = {
 
 const SpMyPage = ({ username, loading, error, avatar, items, onCardClick, onDelete, bookmarkLabel, thumbFor }: SpMyPageProps) => {
   return (
-    <main className="min-h-[70vh] max-w-screen-lg mx-auto mt-24 md:mt-36 px-4 md:px-6">
+    <main className="min-h-[70vh] max-w-screen-lg mx-auto md:mt-36 px-4 md:px-6">
       {loading ? (
         <div className="flex items-center justify-center h-40 text-gray-500">読み込み中...</div>
       ) : username ? (
@@ -38,7 +38,7 @@ const SpMyPage = ({ username, loading, error, avatar, items, onCardClick, onDele
                 <p className="text-sm sm:text-base text-gray-600 mt-0.5 md:mt-1">ブックマークを管理・アクセスできます。</p>
               </div>
               <div className="ml-auto hidden sm:flex items-center gap-2 rounded-full bg-gray-100 px-2.5 md:px-3 py-1 md:py-1.5 text-sm ring-1 ring-gray-200 text-gray-700">
-                <BookmarkIcon sx={{ fontSize: 18, color: '#fbbf24' }} />
+                <BookmarkIcon sx={{ fontSize: 18, color: '#38bdf8' }} />
                 <span className="tabular-nums">{items.length}</span>
                 <span>件</span>
               </div>
@@ -48,7 +48,7 @@ const SpMyPage = ({ username, loading, error, avatar, items, onCardClick, onDele
           <section>
             <div className="flex items-center justify-between mb-3 md:mb-4">
               <h2 className="text-lg md:text-xl font-semibold flex items-center gap-2">
-                <BookmarkIcon sx={{ fontSize: 20, color: '#f59e0b' }} />
+                <BookmarkIcon sx={{ fontSize: 20, color: '#38bdf8' }} />
                 ブックマーク
               </h2>
               <div className="sm:hidden text-sm text-gray-500">{items.length}件</div>
@@ -81,10 +81,6 @@ const SpMyPage = ({ username, loading, error, avatar, items, onCardClick, onDele
               </ul>
             )}
           </section>
-
-          <div className="pt-1.5 md:pt-2">
-            <Link href="/" className="text-sm text-gray-600 hover:text-gray-900 underline underline-offset-4">ホームに戻る</Link>
-          </div>
         </div>
       ) : (
         <div className="space-y-3 md:space-y-4 rounded-2xl border border-gray-200 bg-white/80 backdrop-blur p-6 md:p-8 text-center shadow-sm">

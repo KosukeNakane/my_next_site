@@ -47,7 +47,13 @@ const MyPageContainer = () => {
     try { return decodeURIComponent(label); } catch { return label; }
   };
 
-  const onCardClick = (path: string) => router.push(path);
+  const onCardClick = (path: string) => {
+    const [base, hash] = path.split('#');
+    try {
+      if (hash) sessionStorage.setItem('pendingTarget', hash);
+    } catch {}
+    router.push(base);
+  };
 
   const onDelete = async (path: string) => {
     try {

@@ -20,7 +20,7 @@ export type DesktopMyPageProps = {
 
 const DesktopMyPage = ({ username, loading, error, avatar, items, onCardClick, onDelete, bookmarkLabel, thumbFor }: DesktopMyPageProps) => {
   return (
-    <main className="min-h-[70vh] max-w-screen-lg mx-auto mt-36 px-6">
+    <main className="min-h-[70vh] max-w-screen-lg mx-auto mt-6 px-6">
       {loading ? (
         <div className="flex items-center justify-center h-40 text-gray-500">読み込み中...</div>
       ) : username ? (
@@ -39,7 +39,7 @@ const DesktopMyPage = ({ username, loading, error, avatar, items, onCardClick, o
                 <p className="text-sm sm:text-base text-gray-600 mt-1">ブックマークを管理・アクセスできます。</p>
               </div>
               <div className="ml-auto hidden sm:flex items-center gap-2 rounded-full bg-gray-100 px-3 py-1.5 text-sm ring-1 ring-gray-200 text-gray-700">
-                <BookmarkIcon sx={{ fontSize: 18, color: '#fbbf24' }} />
+                <BookmarkIcon sx={{ fontSize: 18, color: '#38bdf8' }} />
                 <span className="tabular-nums">{items.length}</span>
                 <span>件</span>
               </div>
@@ -49,7 +49,7 @@ const DesktopMyPage = ({ username, loading, error, avatar, items, onCardClick, o
           <section>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold flex items-center gap-2">
-                <BookmarkIcon sx={{ fontSize: 22, color: '#f59e0b' }} />
+                <BookmarkIcon sx={{ fontSize: 22, color: '#38bdf8' }} />
                 ブックマーク
               </h2>
               <div className="sm:hidden text-sm text-gray-500">{items.length}件</div>
@@ -82,10 +82,6 @@ const DesktopMyPage = ({ username, loading, error, avatar, items, onCardClick, o
               </ul>
             )}
           </section>
-
-          <div className="pt-2">
-            <Link href="/" className="text-sm text-gray-600 hover:text-gray-900 underline underline-offset-4">ホームに戻る</Link>
-          </div>
         </div>
       ) : (
         <div className="space-y-4 rounded-2xl border border-gray-200 bg-white/80 backdrop-blur p-8 text-center shadow-sm">

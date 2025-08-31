@@ -26,7 +26,7 @@ const DesktopNavBar = ({
 }: DesktopNavBarProps) => {
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 py-1 md:py-2 ${"bg-white/70 text-gray-800"} ${mode === "benton" ? "font-bentonModernDisplay" : ""} backdrop-blur-md transition-opacity duration-300 ${showNav ? "opacity-100" : "opacity-0"}`}
+      className={`fixed top-0 left-0 w-full z-50 py-2 md:py-4 ${"bg-white/70 text-gray-800"} ${mode === "benton" ? "font-bentonModernDisplay" : ""} backdrop-blur-md transition-opacity duration-300 ${showNav ? "opacity-100" : "opacity-0"}`}
     >
       <nav className="relative w-full px-3 md:px-6 py-2 md:py-9 flex items-center justify-between">
         <div className="w-[calc(50%-5rem)] flex justify-end">

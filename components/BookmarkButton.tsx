@@ -70,10 +70,10 @@ export default function BookmarkButton({ path, title }: Props) {
       onClick={(e) => { e.stopPropagation(); toggle(); }}
       disabled={loading}
       title={active ? 'ブックマーク解除' : 'ブックマーク'}
-      className={`absolute bottom-3 right-3 z-10 rounded-full border shadow p-2 bg-white/90 hover:bg-white ${active ? 'border-amber-300' : 'border-gray-300'}`}
+      className={`absolute bottom-3 right-3 z-10 rounded-full border shadow p-2 bg-white/90 hover:bg-white ${active ? 'border-sky-300' : 'border-gray-300'}`}
       aria-label={active ? 'ブックマーク解除' : 'ブックマーク'}
     >
-      <BookmarkIcon sx={{ fontSize: 22, color: active ? '#f59e0b' : '#9ca3af' }} />
+      <BookmarkIcon sx={{ fontSize: 22, color: active ? '#38bdf8' : '#9ca3af' }} />
     </button>
   );
 }

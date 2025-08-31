@@ -53,7 +53,7 @@ const FOOD = () => {
 
   return (
     <>
-      <section className="relative min-h-screen py-4 md:py-16 overflow-hidden w-full overflow-x-hidden">
+      <section className="relative min-h-screen pt-4 md:pt-16 overflow-hidden w-full overflow-x-hidden">
         <div
           className="fixed inset-0 w-full h-full bg-repeat bg-cover bg-center z-[-2]"
           aria-hidden="true"
@@ -73,7 +73,7 @@ const FOOD = () => {
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
               >
                 <PicCard
@@ -89,7 +89,7 @@ const FOOD = () => {
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
               >
                 <PicCard
@@ -105,7 +105,7 @@ const FOOD = () => {
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, ease: "easeOut", delay: 0 }}
               >
                 <PicCard
@@ -121,7 +121,7 @@ const FOOD = () => {
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
               >
                 <PicCard
@@ -137,7 +137,7 @@ const FOOD = () => {
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, ease: "easeOut", delay: 0 }}
               >
                 <PicCard
@@ -153,7 +153,7 @@ const FOOD = () => {
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, ease: "easeOut", delay: 0 }}
               >
                 <PicCard
@@ -169,7 +169,7 @@ const FOOD = () => {
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, ease: "easeOut", delay: 0 }}
               >
                 <PicCard
@@ -185,7 +185,7 @@ const FOOD = () => {
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, ease: "easeOut", delay: 0 }}
               >
                 <PicCard

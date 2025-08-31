@@ -9,19 +9,125 @@
 
 /* グローバルで scrollbar-hide クラスを定義 */
 .scrollbar-hide {
-  -ms-overflow-style: none; /* IE & Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE & Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
+  /* Chrome, Safari, Opera */
 }
 
-/* globals.css の例 */
+/* Anchor/viewport adjustments for fixed header */
+:root {
+  /* Base header offset (mobile) */
+  --header-offset: 52px;
+  /* Extra space below header when focusing anchors */
+  --anchor-gap: 200px;
+  /* Fixed footer height (mobile) */
+  --footer-height: 56px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    /* Desktop header tends to be taller; keep modest offset */
+    --header-offset: 72px;
+    --anchor-gap: 140px;
+    /* Fixed footer height (desktop) */
+    --footer-height: 72px;
+  }
+}
+
+/* Ensure content isn't hidden under fixed header, incl. iOS safe area */
 body {
-  padding-top: 50px; /* NavBarの高さに応じて調整 */
+  padding-top: calc(var(--header-offset) + env(safe-area-inset-top));
 }
 
+/* Smooth scrolling and anchor offset behavior */
 html {
   scroll-behavior: smooth;
+  /* Helps anchor navigation leave space for header in modern browsers */
+  scroll-padding-top: calc(var(--header-offset) + env(safe-area-inset-top) + var(--anchor-gap));
+}
+
+/* Make any in-page anchor target account for the fixed header */
+[id] {
+  scroll-margin-top: calc(var(--header-offset) + env(safe-area-inset-top) + var(--anchor-gap));
+}
+
+/* Nice highlight animation for targeted items */
+@keyframes popIn {
+  0% {
+    transform: scale(1);
+  }
+
+  30% {
+    transform: scale(1.02);
+  }
+
+  60% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes ringPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.50);
+  }
+
+  70% {
+    box-shadow: 0 0 0 14px rgba(56, 189, 248, 0.00);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.00);
+  }
+}
+
+.highlight-target {
+  position: relative;
+  z-index: 1;
+  /* Subtle pop + outer pulse */
+  animation: popIn 500ms ease-out, ringPulse 1400ms ease-out 100ms 2;
+}
+
+.highlight-target::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  /* draw just outside color to avoid layout shift */
+  border: 4px solid rgba(56, 189, 248, 0.9);
+  /* sky-400 */
+  border-radius: inherit;
+  pointer-events: none;
+  /* Fade-out of the  frame itself */
+  animation: borderPulse 1600ms ease-out forwards;
+}
+
+@keyframes borderPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+
+  10% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  70% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.01);
+  }
 }

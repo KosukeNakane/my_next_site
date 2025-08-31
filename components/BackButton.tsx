@@ -2,10 +2,12 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import useIsMobile from "../hooks/useIsMobile";
 
 export default function BackButton({ useBenton = false }: { useBenton?: boolean }) {
   const router = useRouter();
   const pathname = usePathname();
+  const isMobile = useIsMobile(768);
   const [parentPath, setParentPath] = useState<string | null>(null);
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export default function BackButton({ useBenton = false }: { useBenton?: boolean 
     }
   }, [pathname]);
 
-  if (!parentPath) return null;
+  if (!parentPath || isMobile) return null;
 
   return (
     <button
